@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS product (
     pri_product DECIMAL(10, 2) NOT NULL,
     stock_product INT NOT NULL,
     PRIMARY KEY (idp)
-    );
+);
 
 -- Creación o actualización de la tabla Client
 CREATE TABLE IF NOT EXISTS client (
@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS client (
     ful_nam_client VARCHAR(100) NOT NULL,
     address_client VARCHAR(150) NOT NULL,
     PRIMARY KEY (idc)
-    );
+);
 
 -- Creación o actualización de la tabla Invoice
 CREATE TABLE IF NOT EXISTS invoice (
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS invoice (
     idc_client SERIAL,
     PRIMARY KEY (idn),
     FOREIGN KEY (idc_client) REFERENCES client(idc)
-    );
+);
 
 -- Creación o actualización de la tabla Detail
 CREATE TABLE IF NOT EXISTS detail (
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS detail (
     PRIMARY KEY (idd),
     FOREIGN KEY (idn_invoice) REFERENCES invoice(idn),
     FOREIGN KEY (idp_product) REFERENCES product(idp)
-    );
+);
 
 -- VIEWS --
 
