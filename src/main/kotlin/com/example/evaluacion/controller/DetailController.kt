@@ -5,6 +5,7 @@ import com.example.evaluacion.model.DetailModel
 import com.example.evaluacion.service.DetailService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -16,9 +17,12 @@ class DetailController {
     lateinit var detailService: DetailService
 
     @GetMapping
-    fun list(): List<DetailModel> {
-        return detailService.list()
+    fun list (detail: DetailModel, pageable: Pageable):ResponseEntity<*>{
+        val response= detailService.list(pageable,detail)
+        return ResponseEntity(response, HttpStatus.OK)
     }
+
+//@RequestParam searchValue:String
 
     @PostMapping
     fun save(@RequestBody @Valid detail: DetailModel): ResponseEntity<DetailModel> {

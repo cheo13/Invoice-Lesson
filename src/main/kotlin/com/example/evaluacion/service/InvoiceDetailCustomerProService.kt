@@ -1,34 +1,38 @@
 package com.example.evaluacion.service
 
-import com.example.evaluacion.model.ClientModel
-import com.example.evaluacion.model.InvoiceCustomerInfoModel
 import com.example.evaluacion.model.InvoiceDetailCustomerProductModel
-import com.example.evaluacion.model.InvoiceDetailProductInfoModel
 
-import com.example.evaluacion.repository.ClientRepository
-import com.example.evaluacion.repository.InvoiceCustomerInRepository
 import com.example.evaluacion.repository.InvoiceDetailCustomerProRepository
-import com.example.evaluacion.repository.InvoiceDetailProInfoRepository
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 import javax.transaction.Transactional
-import javax.xml.bind.ValidationException
-import kotlin.math.asin
 
 @Service
-class InvoiceCustomerInService {
+class InvoiceDetailCustomerProService {
     @Autowired
-    lateinit var invoiceCustomerInRepository: InvoiceCustomerInRepository
+    lateinit var invoiceDetailCustomerProRepository: InvoiceDetailCustomerProRepository
 
-    fun findById(idc: Long): ClientModel? {
-        return invoiceCustomerInRepository.findById(idc).orElse(null)
+    @Transactional
+    fun findAll(): List<InvoiceDetailCustomerProductModel> {
+        return invoiceDetailCustomerProRepository.findAll()
     }
 
-    fun findAll(): List<ClientModel> {
-        return invoiceCustomerInRepository.findAll()
+    @Transactional
+    fun findById(codInvoice: Long): InvoiceDetailCustomerProductModel? {
+        return invoiceDetailCustomerProRepository.findById(codInvoice).orElse(null)
+    }
+
+    fun list (pageable: Pageable,invoiceDetailCustomerProductModel: InvoiceDetailCustomerProductModel):Page<InvoiceDetailCustomerProductModel>{
+        val matcher = ExampleMatcher.matching()
+            .withIgnoreNullValues()
+            .withMatcher(("field"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+        return invoiceDetailCustomerProRepository.findAll(Example.of(invoiceDetailCustomerProductModel, matcher), pageable)
     }
 }
+
 

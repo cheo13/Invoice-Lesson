@@ -11,7 +11,7 @@ spring:
     baselineVersion: 1
     locations:
       classpath: db/migration
-    sqlMigrationSuffixes: .postgresql
+    sqlMigrationSuffixes: .sql
     baselineOnMigrate: true
     sqlMigrationPrefix: V
     schemas: public

@@ -3,7 +3,7 @@ package com.example.evaluacion.model
 import jakarta.validation.constraints.NotBlank
 import javax.persistence.*
 
-@Entity
+    @Entity
     @Table(name = "invoice")
     class InvoiceModel {
     @Id
@@ -27,5 +27,5 @@ import javax.persistence.*
     // La relación con la entidad Client
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "idc_client", referencedColumnName = "idc", insertable = false, updatable = false)
-    var client: ClientModel? = null
+    var client: Client? = null
 }

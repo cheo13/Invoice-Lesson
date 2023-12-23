@@ -1,51 +1,34 @@
 package com.example.evaluacion.controller
 
-import ch.qos.logback.core.net.server.Client
-import com.example.evaluacion.model.ClientModel
-import com.example.evaluacion.service.ClientService
-import jakarta.validation.Valid
+import com.example.evaluacion.model.InvoiceCustomerInfoModel
+import com.example.evaluacion.service.InvoiceCustomerInService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
-@RestController   //Define una responsabilidad a un componente
-@RequestMapping("/client")   //endpoint
-class ClientController {
+@RestController
+@RequestMapping("/invoice_customer_info")
+class InvoiceCustomerInfoController {
     @Autowired
-    lateinit var clientService: ClientService
+    lateinit var invoiceCustomerInService: InvoiceCustomerInService
 
     @GetMapping
-    fun list(): List<ClientModel> {
-        return clientService.list()
+    fun list(invoiceCustomerInfoModel: InvoiceCustomerInfoModel, pageable: Pageable): ResponseEntity<*> {
+       val response= invoiceCustomerInService.list(pageable,invoiceCustomerInfoModel)
+        return ResponseEntity(response, HttpStatus.OK)
+
+    }
+    //@RequestParam searchValue:String
+    @GetMapping("/{id}")
+    fun getById(@PathVariable id: Long): ResponseEntity<InvoiceCustomerInfoModel> {
+        val item = invoiceCustomerInService.findById(id)
+        return if (item != null) {
+            ResponseEntity(item, HttpStatus.OK)
+        } else {
+            ResponseEntity(HttpStatus.NOT_FOUND)
+        }
     }
 
-    @PostMapping
-    fun save(@RequestBody @Valid client: ClientModel): ResponseEntity<ClientModel> {
-        return ResponseEntity(clientService.save(client), HttpStatus.OK)
-    }
-
-    @PutMapping
-    fun update(@RequestBody client: ClientModel): ResponseEntity<ClientModel> {
-        return ResponseEntity(clientService.update(client), HttpStatus.OK)
-    }
-
-    @PatchMapping
-    fun updateName(@RequestBody client: ClientModel): ResponseEntity<ClientModel> {
-        return ResponseEntity(clientService.updateName(client), HttpStatus.OK)
-    }
-
-    @GetMapping("/{idc}")
-    fun listById(@PathVariable("idc") idc: Long): ResponseEntity<*> {
-        return ResponseEntity(clientService.listById(idc), HttpStatus.OK)
-    }
-
-
-    @DeleteMapping("/delete/{idc}")
-    fun delete(@PathVariable("idc") idc: Long): Boolean? {
-        clientService.delete(idc)
-        return true
-    }
 }
-
-

@@ -1,78 +1,46 @@
 package com.example.evaluacion.service
 
-import com.example.evaluacion.model.ClientModel
+import com.example.evaluacion.model.InvoiceCustomerInfoModel
 
-import com.example.evaluacion.repository.ClientRepository
+import com.example.evaluacion.repository.InvoiceCustomerInRepository
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.HttpStatus
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import org.springframework.web.server.ResponseStatusException
 import javax.transaction.Transactional
-import javax.xml.bind.ValidationException
-import kotlin.math.asin
 
 @Service
-class ClientService {
+class InvoiceCustomerInService {
     @Autowired
-    lateinit var clientRepository: ClientRepository
+    lateinit var invoiceCustomerInRepository: InvoiceCustomerInRepository
 
     @Transactional
-    fun list(): List<ClientModel> {
-        return clientRepository.findAll()
-    }
-
-    @Transactional
-    fun save(client: ClientModel): ClientModel {
-        validateClient(client)
-        return clientRepository.save(client)
+    fun findById(id: Long): InvoiceCustomerInfoModel? {
+        // Implementa la lógica para convertir un ClientModel a un InvoiceCustomerInfoModel si es necesario
+        val clientModel = invoiceCustomerInRepository.findById(id).orElse(null)
+        // Lógica de conversión o adaptación de ClientModel a InvoiceCustomerInfoModel
+        // Por ejemplo: InvoiceCustomerInfoModel(clientModel.id, clientModel.name, ...)
+        return null // Debes convertir clientModel a InvoiceCustomerInfoModel y retornarlo aquí
     }
 
     @Transactional
-    fun update(client: ClientModel): ClientModel {
-        if (client.idc == null) {
-            throw ValidationException("ID no proporcionada para actualizar")
-        }
-        validateClient(client)
-        return clientRepository.save(client)
+    fun findAll(): List<InvoiceCustomerInfoModel> {
+        // Implementa la lógica para convertir una lista de ClientModel a una lista de InvoiceCustomerInfoModel
+        val clientModels = invoiceCustomerInRepository.findAll()
+        // Lógica de conversión o adaptación de cada ClientMo000000000000000000000000000000000000000000000000000000000000000000000del a InvoiceCustomerInfoModel
+        // Por ejemplo: clientModels.map { InvoiceCustomerInfoModel(it.id, it.name, ...) }
+        return emptyList() // Debes convertir clientModels a List<InvoiceCustomerInfoModel> y retornarlo aquí
     }
 
-    @Transactional
-    fun updateName(client: ClientModel): ClientModel {
-        if (client.idc == null) {
-            throw ValidationException("ID no proporcionada para actualizar el nombre")
-        }
-        val existingClientOptional = clientRepository.findById(client.idc!!)
-        val existingClient = existingClientOptional.orElseThrow {
-            ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado")
-        }
-
-        existingClient.fulNamClient = client.fulNamClient // Actualizar solo el nombre
-
-        return clientRepository.save(existingClient)
+    fun list (pageable: Pageable,invoiceCustomerInfoModel: InvoiceCustomerInfoModel):Page<InvoiceCustomerInfoModel>{
+        val matcher = ExampleMatcher.matching()
+            .withIgnoreNullValues()
+            .withMatcher(("field"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+        return invoiceCustomerInRepository.findAll(Example.of(invoiceCustomerInfoModel, matcher), pageable)
     }
 
-    @Transactional
-    fun listById(idc: Long): ClientModel {
-        return (clientRepository.findById(idc)
-            ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Cliente no encontrado")) as ClientModel
-    }
-
-    @Transactional
-    fun delete(idc: Long) {
-        val existingClient = clientRepository.findById(idc)
-            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Invoice no encontrado") }
-
-        clientRepository.delete(existingClient)
-    }
-
-
-    private fun validateClient(client: ClientModel) {
-        // Realizar validaciones sobre el cliente aquí
-        // Por ejemplo: asegurarse de que los campos obligatorios no estén vacíos
-        if (client.nuiClient.isNullOrBlank() || client.fulNamClient.isNullOrBlank() || client.addressClient.isNullOrBlank()) {
-            throw ValidationException("Campos obligatorios no pueden estar vacíos")
-        }
-    }
 }
 

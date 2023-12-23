@@ -5,7 +5,7 @@ import javax.persistence.*
 
 @Entity
     @Table(name = "client")
-    class ClientModel {
+    class Client {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idc", updatable = false)
@@ -22,4 +22,9 @@ import javax.persistence.*
     @NotBlank(message = "Campo obligatorio")
     @Column(name = "address_client", nullable = false, length = 150)
     var addressClient: String? = null
+
+    @NotBlank(message = "Campo obligatorio")
+    @Column(name = "ema_client", nullable = false, length = 50)
+    var emaClient: String? = null
+
 }

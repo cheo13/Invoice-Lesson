@@ -4,6 +4,10 @@ package com.example.evaluacion.service
 import com.example.evaluacion.model.ProductModel
 import com.example.evaluacion.repository.ProductRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -15,18 +19,18 @@ class ProductService {
     @Autowired
     lateinit var productRepository: ProductRepository
 
-    @Transactional
-    fun list(): List<ProductModel> {
-        return productRepository.findAll()
+    fun list (pageable: Pageable,productModel:ProductModel):Page<ProductModel>{
+        val matcher = ExampleMatcher.matching()
+            .withIgnoreNullValues()
+            .withMatcher(("field"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+        return productRepository.findAll(Example.of(productModel, matcher), pageable)
     }
 
-    @Transactional
     fun save(product: ProductModel): ProductModel {
         validateProduct(product)
         return productRepository.save(product)
     }
 
-    @Transactional
     fun update(product: ProductModel):ProductModel {
         if (product.idp == null) {
             throw ValidationException("ID no proporcionada para actualizar")
@@ -35,7 +39,7 @@ class ProductService {
         return productRepository.save(product)
     }
 
-    @Transactional
+
     fun updateDetails(product: ProductModel): ProductModel {
         if (product.idp == null) {
             throw ValidationException("ID no proporcionada para actualizar detalles")
@@ -46,18 +50,24 @@ class ProductService {
         return productRepository.save(product)
     }
 
-    @Transactional
     fun listById(idp: Long): ProductModel {
         return (productRepository.findById(idp)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado")) as ProductModel
     }
 
-    @Transactional
-    fun delete(idp: Long) {
-        val existingProduct = productRepository.findById(idp)
-            .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Producto no encontrado") }
 
-        productRepository.delete(existingProduct)
+    fun delete(idp: Long):Boolean? {
+        try{
+            val response = productRepository.findById(idp)
+                ?: throw Exception("ID no existe")
+            productRepository.deleteById(idp!!)
+            return true
+        }
+        catch (ex:Exception){
+
+            throw ResponseStatusException(HttpStatus.NOT_FOUND,ex.message)
+        }
+
     }
 
     private fun validateProduct(product: ProductModel) {

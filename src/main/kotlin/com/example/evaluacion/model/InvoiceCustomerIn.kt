@@ -8,8 +8,8 @@ import javax.persistence.*
 class InvoiceCustomerInfoModel {
     // Mapeo de los campos de la vista
     @Id
-    @Column(name = "idn")
-    var idn: Long? = null
+    @Column(name = "id")
+    var id: Long? = null
 
     @Column(name = "cod_invoice")
     var codInvoice: String? = null

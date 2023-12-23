@@ -4,6 +4,10 @@ package com.example.evaluacion.service
 import com.example.evaluacion.model.InvoiceModel
 import com.example.evaluacion.repository.InvoiceRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Example
+import org.springframework.data.domain.ExampleMatcher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
@@ -16,18 +20,28 @@ class InvoiceService {
     @Autowired
     lateinit var invoiceRepository: InvoiceRepository
 
-    @Transactional
-    fun list(): List<InvoiceModel> {
-        return invoiceRepository.findAll()
+    fun list (pageable: Pageable,invoice: InvoiceModel):Page<InvoiceModel>{
+        val matcher = ExampleMatcher.matching()
+            .withIgnoreNullValues()
+            .withMatcher(("field"), ExampleMatcher.GenericPropertyMatchers.contains().ignoreCase())
+        return invoiceRepository.findAll(Example.of(invoice, matcher), pageable)
     }
 
-    @Transactional
+    fun filterTotal (value: Double) : List<InvoiceModel>? {
+        return invoiceRepository.filterTotal(value)
+
+    }
+    fun filterClient(value:Long?): List<InvoiceModel>? {
+        return invoiceRepository.filterClient(value)
+    }
+
+
     fun save(invoice: InvoiceModel): InvoiceModel {
         validateInvoice(invoice)
         return invoiceRepository.save(invoice)
     }
 
-    @Transactional
+
     fun update(invoice: InvoiceModel): InvoiceModel {
         if (invoice.idn == null) {
             throw ValidationException("ID no proporcionada para actualizar")
@@ -36,7 +50,6 @@ class InvoiceService {
         return invoiceRepository.save(invoice)
     }
 
-    @Transactional
     fun updateDetails(invoice: InvoiceModel): InvoiceModel {
         if (invoice.idn == null) {
             throw ValidationException("ID no proporcionada para actualizar detalles")
@@ -47,13 +60,13 @@ class InvoiceService {
         return invoiceRepository.save(invoice)
     }
 
-    @Transactional
+
     fun listById(idn: Long):    InvoiceModel {
         return (invoiceRepository.findById(idn)
             ?: throw ResponseStatusException(HttpStatus.NOT_FOUND, "Invoice no encontrado")) as InvoiceModel
     }
 
-    @Transactional
+
     fun delete(idn: Long) {
         val existingInvoice = invoiceRepository.findById(idn)
             .orElseThrow { ResponseStatusException(HttpStatus.NOT_FOUND, "Invoice no encontrado") }
@@ -66,5 +79,8 @@ class InvoiceService {
         // Por ejemplo: asegurarse de que los campos obligatorios no estén vacíos
         // if (invoice.codInvoice.isNullOrBlank() || ...)
     }
+
+
+
 }
 

@@ -4,6 +4,7 @@ import com.example.evaluacion.model.InvoiceModel
 import com.example.evaluacion.service.InvoiceService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,9 +16,21 @@ class InvoiceController {
     lateinit var invoiceService: InvoiceService
 
     @GetMapping
-    fun list(): List<InvoiceModel> {
-        return invoiceService.list()
+    fun list (invoice: InvoiceModel, pageable: Pageable):ResponseEntity<*>{
+        val response= invoiceService.list(pageable,invoice)
+        return ResponseEntity(response, HttpStatus.OK)
     }
+    @GetMapping("/filter-total/{value}")
+    fun listFilterTotal(@PathVariable ("value") value: Double): ResponseEntity<*>{
+            return  ResponseEntity(invoiceService.filterTotal(value), HttpStatus.OK)
+
+    }
+    @GetMapping("/filter-client/{value}")
+    fun listTotals (@PathVariable("value") value: Long ):   ResponseEntity<*>{
+        return ResponseEntity(invoiceService.filterClient(value), HttpStatus.OK)
+    }
+
+//@RequestParam searchValue:String
 
     @PostMapping
     fun save(@RequestBody @Valid invoice: InvoiceModel): ResponseEntity<InvoiceModel> {

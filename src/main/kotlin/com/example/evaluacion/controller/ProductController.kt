@@ -4,6 +4,7 @@ import com.example.evaluacion.model.ProductModel
 import com.example.evaluacion.service.ProductService
 import jakarta.validation.Valid
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -15,9 +16,12 @@ class ProductController {
     lateinit var productService: ProductService
 
     @GetMapping
-    fun list(): List<ProductModel> {
-        return productService.list()
+    fun list (productModel: ProductModel, pageable: Pageable):ResponseEntity<*>{
+        val response= productService.list(pageable,productModel)
+        return ResponseEntity(response, HttpStatus.OK)
     }
+
+//@RequestParam searchValue:String
 
     @PostMapping
     fun save(@RequestBody @Valid product: ProductModel): ResponseEntity<ProductModel> {
@@ -41,8 +45,7 @@ class ProductController {
 
     @DeleteMapping("/delete/{idp}")
     fun delete(@PathVariable("idp") idp: Long): Boolean? {
-        productService.delete(idp)
-        return true
+        return productService.delete(idp)
     }
 
 }
