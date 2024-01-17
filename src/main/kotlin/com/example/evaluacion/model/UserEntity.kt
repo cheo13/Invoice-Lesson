@@ -1,6 +1,13 @@
 package com.example.evaluacion.model
 
-import javax.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.OneToMany
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "users")
@@ -23,6 +30,4 @@ class UserEntity {
     var disabled: Boolean? = null
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     var roles: List<RoleEntity>? = null
-
-
 }

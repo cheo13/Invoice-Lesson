@@ -11,8 +11,8 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import javax.transaction.Transactional
-import javax.xml.bind.ValidationException
+import org.springframework.transaction.annotation.Transactional;
+//import javax.validation.ValidationException
 
 @Service
 class ProductService {
@@ -33,7 +33,7 @@ class ProductService {
 
     fun update(product: ProductModel):ProductModel {
         if (product.idp == null) {
-            throw ValidationException("ID no proporcionada para actualizar")
+  //          throw ValidationException("ID no proporcionada para actualizar")
         }
         validateProduct(product)
         return productRepository.save(product)
@@ -42,7 +42,7 @@ class ProductService {
 
     fun updateDetails(product: ProductModel): ProductModel {
         if (product.idp == null) {
-            throw ValidationException("ID no proporcionada para actualizar detalles")
+    //        throw ValidationException("ID no proporcionada para actualizar detalles")
         }
         // Actualizar detalles específicos del producto si es necesario
         // Puedes implementar la lógica según tus requisitos

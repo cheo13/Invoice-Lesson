@@ -2,7 +2,7 @@ package com.example.evaluacion.model
 
 import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.NotNull
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
     @Table(name = "product")
@@ -21,7 +21,7 @@ import javax.persistence.*
     var braProduct: String? = null
 
     @NotNull(message = "Campo obligatorio")
-    @Column(name = "pri_product", nullable = false, precision = 10, scale = 2)
+    @Column(name = "pri_product", nullable = false)
     var priProduct: Double? = null
 
     @NotNull(message = "Campo obligatorio")

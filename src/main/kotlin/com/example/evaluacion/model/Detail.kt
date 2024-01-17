@@ -1,7 +1,7 @@
 package com.example.evaluacion.model
 
 import jakarta.validation.constraints.NotNull
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
     @Table(name = "detail")

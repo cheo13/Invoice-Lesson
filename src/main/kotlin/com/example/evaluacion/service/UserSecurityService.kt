@@ -32,5 +32,4 @@ class UserSecurityService: UserDetailsService {
             .disabled(userEntity.disabled!!)
             .build()
     }
-
 }

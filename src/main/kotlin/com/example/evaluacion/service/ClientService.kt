@@ -12,7 +12,8 @@ import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
 import org.springframework.web.server.ResponseStatusException
-import javax.xml.bind.ValidationException
+//import javax.validation.ValidationException;
+
 
 @Service
 class ClientService {
@@ -33,7 +34,8 @@ class ClientService {
 
     fun update(client: Client): Client {
         if (client.idc == null) {
-            throw ValidationException("ID no proporcionada para actualizar")
+
+          //  throw ValidationException("ID no proporcionada para actualizar")
         }
         validateClient(client)
         return clientRepository.save(client)
@@ -42,7 +44,7 @@ class ClientService {
 
     fun updateName(client: Client): Client {
         if (client.idc == null) {
-            throw ValidationException("ID no proporcionada para actualizar el nombre")
+          //  throw ValidationException("ID no proporcionada para actualizar el nombre")
         }
         val existingClientOptional = clientRepository.findById(client.idc!!)
         val existingClient = existingClientOptional.orElseThrow {
@@ -73,7 +75,7 @@ class ClientService {
         // Realizar validaciones sobre el cliente aquí
         // Por ejemplo: asegurarse de que los campos obligatorios no estén vacíos
         if (client.nuiClient.isNullOrBlank() || client.fulNamClient.isNullOrBlank() || client.addressClient.isNullOrBlank()) {
-            throw ValidationException("Campos obligatorios no pueden estar vacíos")
+           // throw ValidationException("Campos obligatorios no pueden estar vacíos")
         }
     }
 }

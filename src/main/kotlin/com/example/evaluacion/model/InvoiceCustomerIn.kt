@@ -1,6 +1,6 @@
 package com.example.evaluacion.model
 
-import javax.persistence.*
+import jakarta.persistence.*
 
 
 @Entity

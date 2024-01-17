@@ -5,6 +5,7 @@ server:
 
 # Configuración de Spring
 spring:
+
   # Configuración de migración
   flyway:
     enabled: true
