@@ -1,11 +1,11 @@
-
 server:
   port: 8081
   error:
     include-message: always
-#Configuracion de spring
+
+# Configuración de Spring
 spring:
-  #Configuracion de migracion
+  # Configuración de migración
   flyway:
     enabled: true
     baselineVersion: 1
@@ -17,7 +17,7 @@ spring:
     schemas: public
 
   datasource:
-    url: jdbc:postgresql://peanut.db.elephantsql.com:5432/nxwiwift?socketTimeout=3
-    username: nxwiwift
-    password: g-YadWHr0c7wl0XCqA6elsAoOzBxoCKC
+    url: jdbc:postgresql://batyr.db.elephantsql.com:5432/lfahliwg
+    username: lfahliwg
+    password: Z9XBq_sfMX5AGtYDF-YAQ2bGohimqqtz
     driverClassName: org.postgresql.Driver
